@@ -11,14 +11,30 @@ public class Customer {
     private Calendar dateCheckin;
     private Calendar dateCheckout;
 
-    public Customer(String firstName, String phoneNumber, String email, Calendar dateCheckin,Calendar dateCheckout){
+    public Customer(String firstName, String lastName, String phoneNumber, String email){
+        // I found this on https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s02.html
+        String phoneRegex = "^(?:\\+?1[-.●]?)?\\(?([0-9]{3})\\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$";
+        Pattern phonePattern = Pattern.compile(phoneRegex);
         Pattern pattern = Pattern.compile("^(.+)@(.+)$",Pattern.CASE_INSENSITIVE);
 
+
         this.firstName = firstName;
-        this.phoneNumber = phoneNumber;
-        this.email = (pattern.matcher(email).matches()) ? email : throw new IllegalArgumentException("Error Invalid email");
-        this.dateCheckin = dateCheckin;
-        this.dateCheckout = dateCheckout;
+        this.lastName = lastName;
+        if(phonePattern.matcher(phoneNumber).matches()) {
+            this.phoneNumber = phoneNumber;
+        }
+        else {
+            throw new IllegalArgumentException("Error Invalid Phone Number");
+        }
+
+        if(pattern.matcher(email).matches()) {
+            this.email = email;
+        }
+        else {
+            throw new IllegalArgumentException("Error Invalid email");
+        }
+        this.dateCheckin = null ;
+        this.dateCheckout = null;
     }
 
     public String getFirstName() {
@@ -42,7 +58,15 @@ public class Customer {
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        String phoneRegex = "^(?:\\+?1[-.●]?)?\\(?([0-9]{3})\\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$";
+        Pattern phonePattern = Pattern.compile(phoneRegex);
+        if(phonePattern.matcher(phoneNumber).matches()) {
+            this.phoneNumber = phoneNumber;
+        }
+        else {
+            throw new IllegalArgumentException("Error Invalid Phone Number");
+        }
+
     }
 
     public String getEmail() {
@@ -50,7 +74,14 @@ public class Customer {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        Pattern pattern = Pattern.compile("^(.+)@(.+)$",Pattern.CASE_INSENSITIVE);
+        if(pattern.matcher(email).matches()) {
+            this.email = email;
+        }
+        else {
+            throw new IllegalArgumentException("Error Invalid email");
+        }
+      
     }
 
     public Calendar getDateCheckin() {
